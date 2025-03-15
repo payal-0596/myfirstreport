@@ -1,0 +1,38 @@
+pipeline {
+    agent any  // Run on any available agent
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-username/your-repository.git' // Redundant, but good practice
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'  // Example: Maven build
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'  // Example: Maven test
+            }
+        }
+        stage('Report') {
+            steps {
+                junit 'target/surefire-reports/*.xml' // If using JUnit
+            }
+        }
+    }
+    post {
+        always {
+            // Run regardless of build result
+            echo "Build finished!"
+        }
+        success {
+            echo "Build succeeded!"
+        }
+        failure {
+            echo "Build failed!"
+        }
+    }
+}
